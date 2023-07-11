@@ -1,35 +1,49 @@
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
-
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    kotlin("android.extensions")
+    id (BuildPlugins.application)
+    kotlin (BuildPlugins.kotlin)
 }
 
 android {
-    compileSdkVersion(27)
+    compileSdk = AndroidConfig.compileSdkVersion
+
     defaultConfig {
-        applicationId = "org.gradle.kotlin.dsl.samples.androidstudio"
-        minSdkVersion(15)
-        targetSdkVersion(27)
-        versionCode = 1
-        versionName = "1.0"
-        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+        applicationId = AndroidConfig.applicationId
+        minSdk = AndroidConfig.minSdkVersion
+        targetSdk = AndroidConfig.targetSdkVersion
+        versionCode = AndroidConfig.versionCode
+        versionName = AndroidConfig.versionName
+
+        testInstrumentationRunner = AndroidConfig.testRunner
     }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    buildFeatures {
+        viewBinding = true
     }
 }
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
-    implementation("com.android.support:appcompat-v7:27.1.1")
-    implementation("com.android.support.constraint:constraint-layout:1.1.0")
-    testImplementation("junit:junit:4.12")
-    androidTestImplementation("com.android.support.test:runner:1.0.2")
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:3.0.2")
+//    implementation(project(":lib"))
+    implementation (Dependencies.core)
+    implementation (Dependencies.appCompat)
+    implementation (Dependencies.materialDesign)
+    implementation (Dependencies.constraintLayout)
+    implementation (Dependencies.navigationFragment)
+    implementation (Dependencies.navigationUI)
+
+    testImplementation (TestDependencies.junit)
+    androidTestImplementation (TestDependencies.junitExt)
+    androidTestImplementation (TestDependencies.espresso)
 }
